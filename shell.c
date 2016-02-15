@@ -5,62 +5,79 @@
 
 #define MAX_INPUT_LENGTH 80
 
+// To be polished
+void replaceChar(char* toReplace, char oldChar, char newChar) {
+	char cur=toReplace[0];
+	int i=0;
+
+	while(cur!='\0'){
+		//printf("%i %c\n",i, cur);
+		if(cur==oldChar)
+			toReplace[i]=newChar;
+		i++;
+		cur=toReplace[i];
+	}
+}
+
+void getInput(char* input) {
+	printf("> ");
+	fgets(input, MAX_INPUT_LENGTH, stdin);
+}
+
+int tokenize(char* output[], char* input, char delimiter) {
+	char *pch;
+	int i = 0;
+
+	pch = strtok (input, &delimiter);
+	while (pch != NULL)
+	{
+		output[i] = pch;
+		//printf ("%i %s\n",i,pch);
+		pch = strtok (NULL, &delimiter);
+		i++;
+	}
+
+	return i;
+}
+
 int main(int argc, char *argv[], char *envp[]) {
-
 	pid_t pid;
-	char *const parmList[] = {"/bin/ls", "-l", "/tmp", NULL};
 
-	if ((pid = fork()) > 0) {
-		printf("Loading new process with pID %d\n", pid);
-		printf("Parent pID: %d\n", getpid());
-	}
-	else if (pid == 0) {
-		// in child
-		execv("/bin/ls", parmList);
-		printf("Return not expected. Must be an execv error.n");
+	while (1) {
+		wait(NULL);
+		char input[MAX_INPUT_LENGTH];
+		printf("my pr %d", getpid());
+		getInput(input);
+		replaceChar(input, '\n', '\0');
 
-		exit(0);
-	} else {
-		perror("fork error");
-		exit(1);
-	}
+		char **paramList;
+		paramList = malloc(MAX_INPUT_LENGTH);
 
-	printf("bye bye\n");
-
-	exit(0);
-
-	//char input[MAX_INPUT_LENGTH];
-
-	//char *pch;
-
-	//while (1) {
-		/*printf("> ");
-		scanf("%s", input);
-
-		printf("input = %s\n", input);
-
-		pch = strtok(input, " ,.-");
-
-		printf("text (post-strtok) = %s\n", pch);
-
-
-
-		int pid = 0;
+		int numOfParam = tokenize(paramList, input, ' ');
+		realloc(paramList, numOfParam+1);
+		paramList[numOfParam] = NULL;
 
 		if ((pid = fork()) > 0) {
-			// in parent
-			printf("parent ID: %d \n forked child ID: %d \n", getpid(), pid);
-		} else if (pid == 0) {
+			printf("Loading new process with pID %d\n", pid);
+			printf("Parent pID: %d\n", getpid());
+		}
+		else if (pid == 0) {
 			// in child
-			printf("child ID: %d\n", getpid());
+			char cmd[MAX_INPUT_LENGTH];
+			strcpy(cmd, "/bin/");
+			strcat(cmd, paramList[0]);
+			//printf("cmd = %s", paramList[1]);
+
+			//execvp(cmd, paramList);
+			execvp(cmd, paramList);
+
+			exit(0);
 		} else {
-			// can't fork
-			perror("fork demo");
+			perror("fork error");
 			exit(1);
-		}*/
-
-		//execv(input, );
-	//}
-
+		}
+		free(paramList);
+	}
+	
 	exit(0);
 }
