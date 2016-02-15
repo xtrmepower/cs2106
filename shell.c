@@ -5,34 +5,62 @@
 
 #define MAX_INPUT_LENGTH 80
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[], char *envp[]) {
 
-	char input[MAX_INPUT_LENGTH];
-
-	int pid;
+	pid_t pid;
+	char *const parmList[] = {"/bin/ls", "-l", "/tmp", NULL};
 
 	if ((pid = fork()) > 0) {
-		// in parent
-		printf("parent ID: %d \n forked child ID: %d \n", getpid(), pid);
-	} else if (pid == 0) {
+		printf("Loading new process with pID %d\n", pid);
+		printf("Parent pID: %d\n", getpid());
+	}
+	else if (pid == 0) {
 		// in child
-		printf("child ID: %d\n", getpid());
+		execv("/bin/ls", parmList);
+		printf("Return not expected. Must be an execv error.n");
+
+		exit(0);
 	} else {
-		// can't fork
-		perror("fork demo");
+		perror("fork error");
 		exit(1);
 	}
 
-	return 0;
+	printf("bye bye\n");
 
-	/*while (1) {
-		printf("> ");
+	exit(0);
+
+	//char input[MAX_INPUT_LENGTH];
+
+	//char *pch;
+
+	//while (1) {
+		/*printf("> ");
 		scanf("%s", input);
 
-		printf("the input is: %s", input);
+		printf("input = %s\n", input);
 
-		execv(input);
-	}*/
+		pch = strtok(input, " ,.-");
 
-	//return 0;
+		printf("text (post-strtok) = %s\n", pch);
+
+
+
+		int pid = 0;
+
+		if ((pid = fork()) > 0) {
+			// in parent
+			printf("parent ID: %d \n forked child ID: %d \n", getpid(), pid);
+		} else if (pid == 0) {
+			// in child
+			printf("child ID: %d\n", getpid());
+		} else {
+			// can't fork
+			perror("fork demo");
+			exit(1);
+		}*/
+
+		//execv(input, );
+	//}
+
+	exit(0);
 }
