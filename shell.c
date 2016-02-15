@@ -5,16 +5,34 @@
 
 #define MAX_INPUT_LENGTH 80
 
-int main() {
+int main(int argc, char *argv[]) {
 
 	char input[MAX_INPUT_LENGTH];
 
-	while (1) {
+	int pid;
+
+	if ((pid = fork()) > 0) {
+		// in parent
+		printf("parent ID: %d \n forked child ID: %d \n", getpid(), pid);
+	} else if (pid == 0) {
+		// in child
+		printf("child ID: %d\n", getpid());
+	} else {
+		// can't fork
+		perror("fork demo");
+		exit(1);
+	}
+
+	return 0;
+
+	/*while (1) {
 		printf("> ");
 		scanf("%s", input);
 
 		printf("the input is: %s", input);
-	}
 
-	return 0;
+		execv(input);
+	}*/
+
+	//return 0;
 }
