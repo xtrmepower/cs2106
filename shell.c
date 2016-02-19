@@ -18,6 +18,7 @@
 #include <stdlib.h>
 
 #define MAX_INPUT_LENGTH 200
+#define MAX_ERROR_MSG_LENGTH 200
 #define MAX_PATH_LENGTH 2000
 
 int compareLastChar(char* target, char* c) {
@@ -56,27 +57,9 @@ int tokenize(char* output[], char* input, char *delimiter) {
 	char *rest = input;
 	int i = 0;
 
-	//printf ("Input: %s Delimiter %s \n",input, delimiter);
 	while ((pch = strtok_r(rest, delimiter, &rest)))
 	{
-		//printf ("%i %s \n",i,pch);
 		output[i] = pch;
-		i++;
-	}
-
-	return i;
-}
-
-
-int tokenize_old(char* output[], char* input, char delimiter) {
-	char *pch = NULL;
-	int i = 0;
-
-	pch = strtok(input, &delimiter);
-	while (pch != NULL) {
-		printf("%i %s \n",i,pch);
-		output[i] = pch;
-		pch = strtok(NULL, &delimiter);
 		i++;
 	}
 
@@ -88,10 +71,7 @@ void runChildProcess(char** paramList) {
 	pathLocationList = malloc(MAX_PATH_LENGTH);
 
 	char *pathVar = getenv("PATH");
-	//printf("%s\n", pathVar);
 	int numOfPathLocations = tokenize(pathLocationList, pathVar, ":");
-
-	//printf("numOfPathLocations = %i \n", numOfPathLocations);
 
 	char cmd[MAX_INPUT_LENGTH];
 	int lastCharPos = 0;
@@ -108,7 +88,10 @@ void runChildProcess(char** paramList) {
 		//printf("%i:)-> %s\n",i, cmd);
 		execvp(cmd, paramList);
 	}
-	// Include error message here
+	char errorMsg[MAX_ERROR_MSG_LENGTH];
+	perror(errorMsg);
+	printf("Shell error: %s", errorMsg);
+	
 	free(pathLocationList);
 }
 
@@ -117,11 +100,15 @@ int main(int argc, char *argv[], char *envp[]) {
 
 	while (1) {
 		wait(NULL);
+
 		char input[MAX_INPUT_LENGTH];
 		getInput(input);
-		int temp = compareLastChar(input, "\n");
-		if (temp != -1) {
-			input[temp] = '\0';
+
+		// See if the last character is a newline character
+		int result = compareLastChar(input, "\n");
+		if (result != -1) {
+			// If it is, replace it with a null terminator
+			input[result] = '\0';
 		}
 
 		char **paramList;
