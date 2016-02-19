@@ -1,3 +1,17 @@
+/*
+	shell.c
+
+	CS2106 Introduction to Operating Systems
+	Assignment 1
+
+	Written by:
+	Name: 	Qwek Siew Weng, Melvyn
+	Matric:	A0111821X
+
+	Name:	Jay Chua Soon Yao
+	Matric:	A0111784H
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -19,15 +33,16 @@ int compareLastChar(char* target, char* c) {
 
 // To be polished
 void replaceChar(char* toReplace, char oldChar, char newChar) {
-	char cur=toReplace[0];
-	int i=0;
+	char curr = toReplace[0];
+	int i = 0;
 
-	while(cur!='\0'){
-		//printf("%i %c\n",i, cur);
-		if(cur==oldChar)
-			toReplace[i]=newChar;
+	while (curr != '\0') {
+		if (curr == oldChar) {
+			toReplace[i] = newChar;
+		}
+
 		i++;
-		cur=toReplace[i];
+		curr = toReplace[i];
 	}
 }
 
@@ -41,11 +56,10 @@ int tokenize(char* output[], char* input, char *delimiter) {
 	char *rest = input;
 	int i = 0;
 
-
-	printf ("Input: %s Delimiter %s \n",input, delimiter);
+	//printf ("Input: %s Delimiter %s \n",input, delimiter);
 	while ((pch = strtok_r(rest, delimiter, &rest)))
 	{
-		printf ("%i %s \n",i,pch);
+		//printf ("%i %s \n",i,pch);
 		output[i] = pch;
 		i++;
 	}
@@ -58,12 +72,11 @@ int tokenize_old(char* output[], char* input, char delimiter) {
 	char *pch = NULL;
 	int i = 0;
 
-	pch = strtok (input, &delimiter);
-	while (pch != NULL)
-	{
-		printf ("%i %s \n",i,pch);
+	pch = strtok(input, &delimiter);
+	while (pch != NULL) {
+		printf("%i %s \n",i,pch);
 		output[i] = pch;
-		pch = strtok (NULL, &delimiter);
+		pch = strtok(NULL, &delimiter);
 		i++;
 	}
 
@@ -75,35 +88,27 @@ void runChildProcess(char** paramList) {
 	pathLocationList = malloc(MAX_PATH_LENGTH);
 
 	char *pathVar = getenv("PATH");
-	printf("%s\n", pathVar);
+	//printf("%s\n", pathVar);
 	int numOfPathLocations = tokenize(pathLocationList, pathVar, ":");
 
-	printf("numOfPathLocations = %i \n", numOfPathLocations);
+	//printf("numOfPathLocations = %i \n", numOfPathLocations);
 
 	char cmd[MAX_INPUT_LENGTH];
 	int lastCharPos = 0;
-	//char temp[MAX_INPUT_LENGTH];
 	for (int i = 0; i < numOfPathLocations; i++) {
-		//strcpy(cmd, "/bin/");
 		strcpy(cmd, pathLocationList[i]);
 		// check if last character is '/'
 		lastCharPos = compareLastChar(cmd, "/");
-		//printf("lastCharPos = %i\n", lastCharPos);
 
 		if (lastCharPos == -1) {
-			// append
-			//printf("call\n");
 			strcat(cmd, "/");
 		}
 		
 		strcat(cmd, paramList[0]);
-		//strcat(pathLocationList[i], "/");
-		printf("%i:)-> %s\n",i, cmd);
-		
-		//strcpy(cmd, pathLocationList[i]);
-		//strcat(cmd, paramList[0]);
+		//printf("%i:)-> %s\n",i, cmd);
 		execvp(cmd, paramList);
 	}
+	// Include error message here
 	free(pathLocationList);
 }
 
@@ -113,9 +118,7 @@ int main(int argc, char *argv[], char *envp[]) {
 	while (1) {
 		wait(NULL);
 		char input[MAX_INPUT_LENGTH];
-		//printf("my pr %d", getpid());
 		getInput(input);
-		//replaceChar(input, '\n', '\0');
 		int temp = compareLastChar(input, "\n");
 		if (temp != -1) {
 			input[temp] = '\0';
