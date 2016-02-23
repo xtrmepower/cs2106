@@ -36,6 +36,8 @@ int main(int argc, char **argv, char** envp) {
 	if (shellPath == NULL) {
 		printf("\n%s value is UNKNOWN.\n\n", SHELL_PATH_STRING);
 	} else {
+		// Move string pointer to the start of the shell path.
+		shellPath = strstr(shellPath, "=")+1;
 		printf("\n%s value is %s\n\n", SHELL_PATH_STRING, shellPath);
 	}
 

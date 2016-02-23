@@ -18,7 +18,9 @@
 #include <stdlib.h>
 
 #define MAX_INPUT_LENGTH 200
-#define MAX_PATH_LENGTH 2000
+#define MAX_PATH_LENGTH 1024
+
+#define SHELL_PATH_STRING "SHELL_PATH"
 
 //#define PRINT_CHILD_EXIT_STATUS
 
@@ -52,8 +54,7 @@ int tokenize(char* output[], char* input, char *delimiter) {
 	char *rest = input;
 	int i = 0;
 
-	while ((pch = strtok_r(rest, delimiter, &rest)))
-	{
+	while ((pch = strtok_r(rest, delimiter, &rest))) {
 		output[i] = pch;
 		i++;
 	}
@@ -103,6 +104,17 @@ void runChildProcess(char** paramList) {
 int main(int argc, char *argv[], char *envp[]) {
 	pid_t pid;
 
+	// Obtain the current working directory.
+	char cwd[MAX_PATH_LENGTH];
+	getcwd(cwd, sizeof(cwd));
+
+	// Assuming that the process is called through the original UNIX shell
+	// e.g. "./shell2", move the pointer to "/"
+	strcat(cwd, argv[0]+1);
+
+	// Add environment variable SHELL_PATH consisting of cwd
+	setenv(SHELL_PATH_STRING, cwd, 1);
+
 	// Loop forever!
 	while (1) {
 		char input[MAX_INPUT_LENGTH];
@@ -151,5 +163,7 @@ int main(int argc, char *argv[], char *envp[]) {
 		}
 		free(paramList);
 	}
+
+	free(cwd);
 	exit(0);
 }
