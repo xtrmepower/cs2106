@@ -34,9 +34,9 @@ int main(int argc, char **argv, char** envp) {
 
 	// Print the shell path if it is found.
 	if (shellPath == NULL) {
-		printf("%s value is UNKNOWN.\n", SHELL_PATH_STRING);
+		printf("\n%s value is UNKNOWN.\n\n", SHELL_PATH_STRING);
 	} else {
-		printf("%s value is %s\n", SHELL_PATH_STRING, shellPath);
+		printf("\n%s value is %s\n\n", SHELL_PATH_STRING, shellPath);
 	}
 
 	return 0;
