@@ -1,7 +1,8 @@
 /*
-	shell.c
+	shell2.c
 
 	CS2106 Introduction to Operating Systems
+	AY2015/2016 SEM2
 	Assignment 1
 
 	Written by:
@@ -138,6 +139,7 @@ int main(int argc, char *argv[], char *envp[]) {
 
 		// Create a new child process.
 		if ((pid = fork()) > 0) {
+			// In parent.
 			printf("Loading new process with pID %d\n", pid);
 			printf("Parent pID: %d\n", getpid());
 

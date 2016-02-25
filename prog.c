@@ -2,6 +2,7 @@
 	prog.c
 
 	CS2106 Introduction to Operating Systems
+	AY2015/2016 SEM2
 	Assignment 1
 
 	Written by:
@@ -36,7 +37,7 @@ int main(int argc, char **argv, char** envp) {
 	if (shellPath == NULL) {
 		printf("\n%s value is UNKNOWN.\n\n", SHELL_PATH_STRING);
 	} else {
-		// Move string pointer to the start of the shell path.
+		// Move string pointer to the start of the shell path value.
 		shellPath = strstr(shellPath, "=")+1;
 		printf("\n%s value is %s\n\n", SHELL_PATH_STRING, shellPath);
 	}

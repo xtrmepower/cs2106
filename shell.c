@@ -2,6 +2,7 @@
 	shell.c
 
 	CS2106 Introduction to Operating Systems
+	AY2015/2016 SEM2
 	Assignment 1
 
 	Written by:
@@ -52,8 +53,7 @@ int tokenize(char* output[], char* input, char *delimiter) {
 	char *rest = input;
 	int i = 0;
 
-	while ((pch = strtok_r(rest, delimiter, &rest)))
-	{
+	while ((pch = strtok_r(rest, delimiter, &rest))) {
 		output[i] = pch;
 		i++;
 	}
